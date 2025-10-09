@@ -3,6 +3,7 @@
 ## � Authentication Updates (Latest)
 
 ### **GitHub OAuth Added** ✅
+
 - **New Feature**: Users can now sign in with GitHub
 - **How it works**: Click "GitHub" button → Authorize on GitHub → Automatically logged in
 - **Setup Required**: See [GITHUB-OAUTH-SETUP.md](./GITHUB-OAUTH-SETUP.md) for configuration
@@ -13,12 +14,14 @@
 ## 🐛 Bug Fixes
 
 ### **Drag & Drop Fixed** ✅
+
 - **Issue**: Commands could not be dragged between groups
 - **Root Cause**: GroupTree was checking for a `draggedCommand` state that was always null
 - **Solution**: Removed unnecessary state, simplified to use only HTML5 dataTransfer API
 - **Status**: Now working correctly - commands can be moved between any groups
 
 ### **Default Groups Verified** ✅
+
 - **Status**: Already working correctly
 - **How it works**: Automatically creates Salesforce, Git, NPM groups on first login
 - **Note**: Only triggers when user has ZERO groups (new accounts or after deleting all groups)

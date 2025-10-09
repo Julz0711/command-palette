@@ -9,11 +9,13 @@ Your app now supports GitHub OAuth! Follow these steps to configure it:
 ## Step 1: Create a GitHub OAuth App
 
 1. Go to **GitHub Settings** → **Developer Settings** → **OAuth Apps**
+
    - Direct link: https://github.com/settings/developers
 
 2. Click **"New OAuth App"**
 
 3. Fill in the application details:
+
    ```
    Application name: Command Clipboard
    Homepage URL: http://localhost:5174
@@ -31,6 +33,7 @@ Your app now supports GitHub OAuth! Follow these steps to configure it:
 ## Step 2: Configure Supabase
 
 1. Go to your **Supabase Dashboard**
+
    - https://app.supabase.com/project/YOUR_PROJECT_ID
 
 2. Navigate to **Authentication** → **Providers**
@@ -38,6 +41,7 @@ Your app now supports GitHub OAuth! Follow these steps to configure it:
 3. Find **GitHub** in the list and click to expand
 
 4. Enable GitHub authentication and paste your credentials:
+
    ```
    ✅ Enable GitHub provider
    Client ID: (paste from GitHub)
@@ -45,6 +49,7 @@ Your app now supports GitHub OAuth! Follow these steps to configure it:
    ```
 
 5. Copy the **Callback URL** shown in Supabase
+
    - It should look like: `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
 
 6. Click **Save**
@@ -56,6 +61,7 @@ Your app now supports GitHub OAuth! Follow these steps to configure it:
 1. Go back to your GitHub OAuth App settings
 
 2. Verify the **Authorization callback URL** matches the one from Supabase:
+
    ```
    https://YOUR_SUPABASE_PROJECT.supabase.co/auth/v1/callback
    ```
@@ -67,6 +73,7 @@ Your app now supports GitHub OAuth! Follow these steps to configure it:
 ## Step 4: Test the Integration
 
 ### Local Testing:
+
 1. Start your dev server: `npm run dev`
 2. Visit http://localhost:5174
 3. Click the **"GitHub"** button
@@ -78,9 +85,11 @@ Your app now supports GitHub OAuth! Follow these steps to configure it:
 When deploying to production (e.g., Vercel), you'll need to:
 
 1. **Add Production URL to GitHub OAuth App**:
+
    ```
    Homepage URL: https://your-app.vercel.app
    ```
+
    Note: Keep the same Supabase callback URL
 
 2. **Update Supabase Redirect URLs**:
@@ -96,6 +105,7 @@ When deploying to production (e.g., Vercel), you'll need to:
 ## ✅ How It Works
 
 ### For Users:
+
 1. Click **"GitHub"** button on login page
 2. Redirected to GitHub authorization page
 3. Approve access to your app
@@ -103,6 +113,7 @@ When deploying to production (e.g., Vercel), you'll need to:
 5. **Default groups** (Salesforce, Git, NPM) created automatically on first login!
 
 ### Technical Flow:
+
 ```
 User clicks GitHub button
     ↓
@@ -126,19 +137,23 @@ Dashboard loads (with default groups if new user!)
 ## 🔧 Troubleshooting
 
 ### "Invalid OAuth credentials"
+
 - Double-check Client ID and Client Secret in Supabase
 - Make sure you copied them correctly from GitHub
 
 ### "Redirect URI mismatch"
+
 - Verify the callback URL in GitHub OAuth App matches Supabase
 - Should be: `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
 
 ### GitHub button does nothing
+
 - Check browser console for errors
 - Verify Supabase provider is enabled
 - Make sure you clicked "Save" in Supabase dashboard
 
 ### Works locally but not in production
+
 - Add production URL to GitHub OAuth App
 - Add production URL to Supabase redirect URLs
 - Check environment variables are set in Vercel

@@ -5,6 +5,7 @@
 Your Command Clipboard app now supports **GitHub OAuth authentication**!
 
 Users can choose to:
+
 - 📧 **Email/Password** - Traditional authentication (already working)
 - 🔗 **GitHub** - One-click OAuth login (NEW!)
 
@@ -13,6 +14,7 @@ Users can choose to:
 ## 🎨 UI Changes
 
 ### Login Screen - Before:
+
 ```
 ┌────────────────────────────┐
 │  Email: [___________]      │
@@ -24,6 +26,7 @@ Users can choose to:
 ```
 
 ### Login Screen - After:
+
 ```
 ┌────────────────────────────┐
 │  Email: [___________]      │
@@ -47,8 +50,10 @@ Users can choose to:
 **File**: `src/components/AuthPage.jsx`
 
 **Added**:
+
 1. GitHub icon import from Lucide React
 2. `handleGitHubAuth()` function:
+
    ```javascript
    const handleGitHubAuth = async () => {
      const { error } = await supabase.auth.signInWithOAuth({
@@ -65,6 +70,7 @@ Users can choose to:
 4. GitHub button with click handler
 
 **Benefits**:
+
 - ✅ Cleaner user experience
 - ✅ No email confirmation needed for GitHub users
 - ✅ Faster signup/login process
@@ -77,14 +83,17 @@ Users can choose to:
 To enable GitHub OAuth, you need to configure:
 
 ### 1. GitHub OAuth App
+
 - Create at: https://github.com/settings/developers
 - Get Client ID and Client Secret
 
-### 2. Supabase Configuration  
+### 2. Supabase Configuration
+
 - Add GitHub credentials to Authentication → Providers
 - Enable GitHub provider
 
 ### 3. Full Instructions
+
 📖 **See [GITHUB-OAUTH-SETUP.md](./GITHUB-OAUTH-SETUP.md)** for detailed step-by-step guide
 
 ---
@@ -92,10 +101,12 @@ To enable GitHub OAuth, you need to configure:
 ## 🧪 Testing
 
 ### Without Configuration (Current State):
+
 - Email/password login: ✅ Works
 - GitHub button: ⚠️ Shows but won't work until configured
 
 ### After Configuration:
+
 - Email/password login: ✅ Works
 - GitHub button: ✅ Works - redirects to GitHub, then logs in
 
@@ -134,6 +145,7 @@ See default groups (Salesforce, Git, NPM)
 ## 📊 Build Status
 
 ✅ **Build Successful**
+
 ```
 ✓ 2142 modules transformed
 dist/assets/index-BJYAgJ2X.js   374.40 kB │ gzip: 108.99 kB
@@ -141,6 +153,7 @@ dist/assets/index-BJYAgJ2X.js   374.40 kB │ gzip: 108.99 kB
 ```
 
 ✅ **No Breaking Changes**
+
 - Email/password auth still works
 - Existing users not affected
 - Optional feature - can be used or ignored
@@ -159,7 +172,7 @@ dist/assets/index-BJYAgJ2X.js   374.40 kB │ gzip: 108.99 kB
 ## 📚 Documentation Updated
 
 - ✅ README.md - Added GitHub OAuth to features
-- ✅ SETUP.md - Added optional GitHub OAuth setup step  
+- ✅ SETUP.md - Added optional GitHub OAuth setup step
 - ✅ UPDATES.md - Documented new authentication feature
 - ✅ GITHUB-OAUTH-SETUP.md - NEW detailed setup guide
 
@@ -168,15 +181,18 @@ dist/assets/index-BJYAgJ2X.js   374.40 kB │ gzip: 108.99 kB
 ## 💡 Tips
 
 **For Development**:
+
 - You can test locally with GitHub OAuth
 - Use `http://localhost:5174` as redirect URL during setup
 
 **For Production**:
+
 - Update GitHub OAuth app with production URL
 - Add production URL to Supabase allowed redirects
 - Both auth methods work in production
 
 **For Users**:
+
 - Let users choose their preferred auth method
 - GitHub OAuth = faster signup, no email confirmation
 - Email/password = works without GitHub account
@@ -187,12 +203,13 @@ dist/assets/index-BJYAgJ2X.js   374.40 kB │ gzip: 108.99 kB
 
 You now have **two authentication options** in your app:
 
-| Method | Pros | Cons |
-|--------|------|------|
-| **Email/Password** | Works immediately, no setup needed | Requires email confirmation |
-| **GitHub OAuth** | Faster, no confirmation, uses existing account | Requires initial setup |
+| Method             | Pros                                           | Cons                        |
+| ------------------ | ---------------------------------------------- | --------------------------- |
+| **Email/Password** | Works immediately, no setup needed             | Requires email confirmation |
+| **GitHub OAuth**   | Faster, no confirmation, uses existing account | Requires initial setup      |
 
 Both methods:
+
 - Create the same user experience after login
 - Get default groups (Salesforce, Git, NPM)
 - Have full access to all features

@@ -148,7 +148,7 @@ A lightweight web app designed to help developers organize, store, and quickly c
      ));
    ```
 
-6. **Run the development server**
+8. **Run the development server**
 
    ```bash
    npm run dev
@@ -160,7 +160,7 @@ A lightweight web app designed to help developers organize, store, and quickly c
 
 ### Creating Your First Command
 
-1. **Sign up** or **log in** 
+1. **Sign up** or **log in**
    - Use email/password, OR
    - Click "GitHub" to sign in with GitHub
 2. You'll see **3 default groups** automatically created: Salesforce, Git, NPM

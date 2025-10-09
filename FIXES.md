@@ -3,11 +3,14 @@
 ## Issues Identified
 
 ### 1. **Drag & Drop Not Working** ✅ FIXED
+
 **Problem**: Commands could not be dragged and dropped between groups.
 
 **Root Cause**: In `GroupTree.jsx`, the `handleDrop` function was checking for both `commandId` AND `draggedCommand` state variable:
+
 ```javascript
-if (commandId && draggedCommand) {  // ❌ draggedCommand was always null
+if (commandId && draggedCommand) {
+  // ❌ draggedCommand was always null
   onMoveCommand(commandId, group.id);
 }
 ```
@@ -15,13 +18,17 @@ if (commandId && draggedCommand) {  // ❌ draggedCommand was always null
 The `draggedCommand` state was being set in the child `CommandCard`, but it wasn't properly communicating with the parent `GroupTree` component. The command ID was correctly being passed via `dataTransfer`, making the `draggedCommand` check unnecessary.
 
 **Fix Applied**:
+
 - Removed the `draggedCommand` state variable from `GroupTree.jsx`
 - Simplified the `handleDrop` function to only check for `commandId`:
+
 ```javascript
-if (commandId) {  // ✅ Now works correctly
+if (commandId) {
+  // ✅ Now works correctly
   onMoveCommand(commandId, group.id);
 }
 ```
+
 - Removed unnecessary `onDragStart` and `onDragEnd` callbacks from `CommandCard`
 - Simplified drag implementation to use only the HTML5 Drag & Drop API
 
@@ -32,7 +39,7 @@ if (commandId) {  // ✅ Now works correctly
 ```javascript
 const createDefaultGroups = async () => {
   const defaultGroups = ['Salesforce', 'Git', 'NPM'];
-  
+
   const { data, error } = await supabase
     .from('groups')
     .insert(
@@ -43,7 +50,7 @@ const createDefaultGroups = async () => {
       }))
     )
     .select();
-    
+
   return data || [];
 };
 
@@ -55,6 +62,7 @@ if (groupsData.length === 0) {
 ```
 
 **How It Works**:
+
 1. When a new user logs in, `fetchData()` runs
 2. If the user has zero groups, it automatically creates three default groups: Salesforce, Git, NPM
 3. These groups are fully deletable and editable like any other group
@@ -63,6 +71,7 @@ if (groupsData.length === 0) {
 ## Testing Instructions
 
 ### Test Drag & Drop:
+
 1. Visit http://localhost:5174
 2. Log in or create an account
 3. Create at least 2 groups (or use the default Salesforce, Git, NPM)
@@ -73,6 +82,7 @@ if (groupsData.length === 0) {
 8. Refresh the page - the command should remain in the new group (persisted to database)
 
 ### Test Default Groups:
+
 1. Create a NEW user account (or delete all existing groups from current user)
 2. After login, you should immediately see 3 groups:
    - Salesforce
@@ -96,41 +106,45 @@ if (groupsData.length === 0) {
 ## What Changed
 
 ### Before (Broken):
+
 ```javascript
 // GroupTree.jsx
 const [draggedCommand, setDraggedCommand] = useState(null);
 
 const handleDrop = (e) => {
   const commandId = e.dataTransfer.getData('text/plain');
-  if (commandId && draggedCommand) {  // ❌ Never true
+  if (commandId && draggedCommand) {
+    // ❌ Never true
     onMoveCommand(commandId, group.id);
   }
 };
 
 // CommandCard received callbacks
-<CommandCard 
+<CommandCard
   onDragStart={(cmd) => setDraggedCommand(cmd)}
   onDragEnd={() => setDraggedCommand(null)}
-/>
+/>;
 ```
 
 ### After (Fixed):
+
 ```javascript
 // GroupTree.jsx - No draggedCommand state needed!
 
 const handleDrop = (e) => {
   const commandId = e.dataTransfer.getData('text/plain');
-  if (commandId) {  // ✅ Works!
+  if (commandId) {
+    // ✅ Works!
     onMoveCommand(commandId, group.id);
   }
 };
 
 // CommandCard doesn't need callbacks
-<CommandCard 
+<CommandCard
   command={command}
   onEdit={onEditCommand}
   onDelete={onDeleteCommand}
-/>
+/>;
 ```
 
 ## Next Steps

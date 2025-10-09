@@ -135,11 +135,12 @@ For GitHub login functionality, follow the detailed guide:
 📖 **See [GITHUB-OAUTH-SETUP.md](./GITHUB-OAUTH-SETUP.md) for step-by-step instructions**
 
 Quick summary:
+
 1. Create a GitHub OAuth App
 2. Add credentials to Supabase Authentication → Providers → GitHub
 3. Users can then log in with GitHub!
 
-*Note: Email/password login works without this step - GitHub OAuth is optional.*
+_Note: Email/password login works without this step - GitHub OAuth is optional._
 
 ---
 
@@ -158,6 +159,7 @@ npm run dev
 ### First Time Setup
 
 **Option A: Email/Password**
+
 1. Open **http://localhost:5174** in your browser
 2. Click **"Don't have an account? Sign up"**
 3. Enter your email and password (min 6 characters)
@@ -165,6 +167,7 @@ npm run dev
 5. Log in with your credentials
 
 **Option B: GitHub OAuth** (if configured)
+
 1. Open **http://localhost:5174** in your browser
 2. Click **"GitHub"** button
 3. Authorize the app on GitHub

@@ -5,15 +5,17 @@
 ### ✅ Test 1: Default Groups (For New Users)
 
 **Option A - Create New Account:**
+
 1. Go to http://localhost:5174
-2. Click "Sign Up" 
+2. Click "Sign Up"
 3. Enter a NEW email and password
 4. After signup, you should see 3 groups automatically:
    - 📁 Salesforce
-   - 📁 Git  
+   - 📁 Git
    - 📁 NPM
 
 **Option B - Clear Existing Data:**
+
 1. Log in with existing account
 2. Delete ALL your groups manually
 3. Refresh the page (F5)
@@ -24,6 +26,7 @@
 ### ✅ Test 2: Drag & Drop Commands
 
 **Setup:**
+
 1. Make sure you have at least 2 groups
 2. Add a command to one of the groups (click the + icon)
 3. Example command:
@@ -31,6 +34,7 @@
    - Command: `sf project deploy start -o <org>`
 
 **Test Dragging:**
+
 1. Find the command card in the group
 2. Look for the **☰** (grip) icon on the left side
 3. Click and HOLD the grip icon
@@ -42,6 +46,7 @@
 7. The command should now be in the new group!
 
 **Verify It Persisted:**
+
 1. Refresh the page (F5)
 2. The command should still be in the new group
 3. This confirms it saved to the database ✅
@@ -51,16 +56,19 @@
 ### 🐛 Troubleshooting
 
 **Default Groups Don't Appear:**
+
 - Are you using a NEW account or do you have existing groups?
 - Default groups only create when you have **ZERO** groups
 - Try deleting all groups and refreshing
 
 **Drag & Drop Doesn't Work:**
+
 - Make sure you're clicking the **☰ grip icon** (far left of command card)
 - Don't click the command title or buttons - those aren't draggable
 - Try a different browser if issues persist
 
 **Console Errors:**
+
 - Open browser DevTools (F12)
 - Check Console tab for errors
 - Most common: Supabase connection issues (check .env file)
@@ -70,6 +78,7 @@
 ### 📊 Expected Behavior
 
 #### ✅ Working Drag & Drop:
+
 ```
 Before:
 Group: Salesforce
@@ -85,6 +94,7 @@ Group: Git
 ```
 
 #### ✅ Default Groups (New User):
+
 ```
 Login Screen → Sign Up → Email/Password → Submit
 
