@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+body {
+  background-color: rgb(17 24 39);
+  color: rgb(229 231 235);
+}
+
+.placeholder-text {
+  color: rgb(196 181 253);
+  font-weight: 600;
+  background-color: rgb(88 28 135);
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.command-segment {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.command-segment:hover {
+  background-color: rgb(55 65 81);
+  border-radius: 0.25rem;
+}
