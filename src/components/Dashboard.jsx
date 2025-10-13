@@ -38,6 +38,43 @@ export default function Dashboard({ user, onLogout }) {
         .select();
 
       if (error) throw error;
+
+      // Insert some tutorial/example commands into the newly created groups
+      try {
+        const groupsByName = (data || []).reduce((acc, g) => {
+          acc[g.name.toLowerCase()] = g.id;
+          return acc;
+        }, {});
+
+        const tutorialCommands = [
+          {
+            group_id: groupsByName['salesforce'],
+            title: 'Dry run deploy',
+            command_text:
+              'sf project deploy start --manifest <path/to/package.xml> --target-org <TargetOrg> --test-level RunLocalTests --dry-run'
+          },
+          {
+            group_id: groupsByName['git'],
+            title: 'Add everything & Commit',
+            command_text: 'git add -A && git commit -m "<CommitMessage>"'
+          },
+          {
+            group_id: groupsByName['npm'],
+            title: 'npm Install',
+            command_text: 'npm install <PackageName>'
+          }
+        ].filter((c) => c.group_id);
+
+        if (tutorialCommands.length > 0) {
+          const { error: cmdsError } = await supabase
+            .from('commands')
+            .insert(tutorialCommands);
+          if (cmdsError) throw cmdsError;
+        }
+      } catch (cmdsErr) {
+        console.error('Error inserting tutorial commands:', cmdsErr);
+      }
+
       return data || [];
     } catch (error) {
       console.error('Error creating default groups:', error);
