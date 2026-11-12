@@ -1,280 +1,90 @@
-# Command Clipboard 🧩
+# Command Clipboard
 
-A lightweight web app designed to help developers organize, store, and quickly copy frequently used CLI commands — especially for Salesforce CLI workflows.
+A personal command library for developers: organize frequently used CLI commands, find them quickly, and copy exactly the part you need.
 
-## 🎯 Features
+Designed around workflows such as Salesforce CLI, Git, and npm, with nested groups and highlighted placeholders.
 
-- **Organized Command Groups**: Create hierarchical groups and subgroups (e.g., Salesforce → Project → Commands)
-- **Placeholder Support**: Use `<placeholder>` syntax for variables in commands
-- **Smart Copying**: Copy entire commands or click individual segments to copy
-- **Drag & Drop**: Move commands between groups with visual feedback
-- **Multiple Auth Methods**: Sign in with email/password OR GitHub OAuth
-- **Default Groups**: Auto-created Salesforce, Git, NPM groups for new users
-- **Secure Storage**: All data persisted via Supabase with Row Level Security
-- **Dark Theme**: Modern dark UI with purple accents
-- **Clean UI**: Built with TailwindCSS for a fast, intuitive experience
+[Features](#features) · [Quick start](#quick-start) · [Usage](#usage) · [Development](#development)
 
-## 🧱 Tech Stack
+## Features
 
-- **Frontend**: Vite + React + TailwindCSS
-- **Backend**: Supabase (Auth + Postgres DB)
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-- **Hosting**: Vercel (recommended)
+- **Nested groups:** organize commands by tool, project, or task.
+- **Search:** filter commands by title or command text.
+- **Flexible copying:** copy a full command or individual segments, including `<placeholders>`.
+- **Drag and drop:** move commands between groups.
+- **Personal accounts:** sign in with email/password or GitHub OAuth through Supabase.
+- **Starter content:** new accounts receive Salesforce, Git, and npm groups with example commands.
 
-## 🚀 Getting Started
+Built with React, Vite, Tailwind CSS, Lucide icons, and Supabase Auth/Postgres. Database access is controlled by the row-level security policies in the setup SQL.
 
-### Prerequisites
+## Quick start
 
-- Node.js 20.19+ or 22.12+
-- npm or yarn
-- A Supabase account ([supabase.com](https://supabase.com))
+Use Node.js 22.12+ and npm, plus a Supabase project.
 
-### Installation
+```sh
+git clone https://github.com/Julz0711/command-palette.git
+cd command-palette
+npm ci
+```
 
-1. **Clone the repository**
+1. Run [supabase-setup.sql](supabase-setup.sql) in your Supabase SQL Editor to create the tables and policies.
+2. Create `.env.local` with your project URL and public anon key:
 
-   ```bash
-   git clone <your-repo-url>
-   cd command-palette
+   ```dotenv
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-public-anon-key
    ```
 
-2. **Install dependencies**
+3. Configure Supabase Auth's site and redirect URLs for your local app. To enable GitHub login, follow [GITHUB-OAUTH-SETUP.md](GITHUB-OAUTH-SETUP.md).
+4. Start the app:
 
-   ```bash
-   npm install
-   ```
-
-3. **Set up Supabase**
-
-   - Create a new project at [supabase.com](https://supabase.com)
-   - Go to Project Settings → API
-   - Copy your Project URL and anon/public key
-
-4. **Configure environment variables**
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env` and add your Supabase credentials:
-
-   ```
-   VITE_SUPABASE_URL=your_supabase_url_here
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
-   ```
-
-5. **Set up database tables**
-
-   Run the SQL from `supabase-setup.sql` in your Supabase SQL Editor to create tables and policies.
-
-6. **(Optional) Set up GitHub OAuth**
-
-   See [GITHUB-OAUTH-SETUP.md](./GITHUB-OAUTH-SETUP.md) for detailed instructions on enabling GitHub authentication.
-
-7. **Start the development server**
-
-   ```sql
-   -- Create groups table
-   CREATE TABLE groups (
-     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-     name TEXT NOT NULL,
-     parent_id UUID REFERENCES groups(id) ON DELETE CASCADE,
-     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-   );
-
-   -- Create commands table
-   CREATE TABLE commands (
-     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-     group_id UUID REFERENCES groups(id) ON DELETE CASCADE,
-     title TEXT NOT NULL,
-     command_text TEXT NOT NULL,
-     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-   );
-
-   -- Enable Row Level Security
-   ALTER TABLE groups ENABLE ROW LEVEL SECURITY;
-   ALTER TABLE commands ENABLE ROW LEVEL SECURITY;
-
-   -- Create policies for groups
-   CREATE POLICY "Users can view their own groups"
-     ON groups FOR SELECT
-     USING (auth.uid() = user_id);
-
-   CREATE POLICY "Users can insert their own groups"
-     ON groups FOR INSERT
-     WITH CHECK (auth.uid() = user_id);
-
-   CREATE POLICY "Users can update their own groups"
-     ON groups FOR UPDATE
-     USING (auth.uid() = user_id);
-
-   CREATE POLICY "Users can delete their own groups"
-     ON groups FOR DELETE
-     USING (auth.uid() = user_id);
-
-   -- Create policies for commands
-   CREATE POLICY "Users can view commands in their groups"
-     ON commands FOR SELECT
-     USING (EXISTS (
-       SELECT 1 FROM groups
-       WHERE groups.id = commands.group_id
-       AND groups.user_id = auth.uid()
-     ));
-
-   CREATE POLICY "Users can insert commands in their groups"
-     ON commands FOR INSERT
-     WITH CHECK (EXISTS (
-       SELECT 1 FROM groups
-       WHERE groups.id = commands.group_id
-       AND groups.user_id = auth.uid()
-     ));
-
-   CREATE POLICY "Users can update commands in their groups"
-     ON commands FOR UPDATE
-     USING (EXISTS (
-       SELECT 1 FROM groups
-       WHERE groups.id = commands.group_id
-       AND groups.user_id = auth.uid()
-     ));
-
-   CREATE POLICY "Users can delete commands in their groups"
-     ON commands FOR DELETE
-     USING (EXISTS (
-       SELECT 1 FROM groups
-       WHERE groups.id = commands.group_id
-       AND groups.user_id = auth.uid()
-     ));
-   ```
-
-8. **Run the development server**
-
-   ```bash
+   ```sh
    npm run dev
    ```
 
-   Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open the URL printed by Vite, normally [localhost:5173](http://localhost:5173). Use a public anon key in the frontend; keep Supabase service-role keys out of browser configuration.
 
-## 📖 Usage
+## Usage
 
-### Creating Your First Command
+1. Sign up or sign in.
+2. Create a group or subgroup, or use one of the starter groups.
+3. Add a title and command, for example:
 
-1. **Sign up** or **log in**
-   - Use email/password, OR
-   - Click "GitHub" to sign in with GitHub
-2. You'll see **3 default groups** automatically created: Salesforce, Git, NPM
-3. Click **"New Group"** to create additional groups, or click **+** on existing groups
-4. Click the **+** icon on a group to add a command
-5. Enter a title and command with placeholders:
-   - **Title**: `Retrieve GlobalValueSet`
-   - **Command**: `sf project retrieve start -o <org> -m GlobalValueSet`
-6. Click **"Create Command"**
+   ```sh
+   sf project retrieve start -o <org> -m GlobalValueSet
+   ```
 
-### Copying Commands
+4. Use the copy button for the full command, or click a segment to copy it.
+5. Search, edit, or drag commands into another group as your library grows.
 
-- **Copy All**: Click the purple button to copy the entire command
-- **Click Segments**: Click any part of the command to copy just that segment
-- **Placeholders**: Highlighted in purple - click to copy just the placeholder
-- Example: `sf org create -a <alias>` - click `<alias>` to copy just that part
+Commands are stored and copied as text. Replace placeholders before running a copied command in your terminal.
 
-### Organizing Commands
+## Development
 
-- **Drag & Drop**: Click and drag the ☰ grip icon to move commands between groups
-- **Create subgroups** using the folder icon
-- **Edit** group names by clicking the pencil icon
-- **Delete** groups or commands (with confirmation)
-- Use the **search bar** to filter commands
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start Vite. |
+| `npm run build` | Create the production build. |
+| `npm run preview` | Preview the build locally. |
+| `npm run lint` | Run ESLint. |
 
-## 🗂️ Example Command Structure
+## Code map
 
-```
-Salesforce
- ├─ Project
- │   ├─ Retrieve GlobalValueSet
- │   │   → sf project retrieve start -o <org> -m GlobalValueSet
- │   └─ Deploy Changes
- │       → sf project deploy start -o <org> -d force-app
- └─ Org
-     ├─ Create Scratch Org
-     │   → sf org create scratch -f config/project-scratch-def.json -a <alias>
-     ├─ Authorize DevHub
-     │   → sf org login web -a <devhub-alias> -d
-     └─ Delete Org
-         → sf org delete scratch -o <org>
-```
+| Path | Responsibility |
+| --- | --- |
+| [src/components/Dashboard.jsx](src/components/Dashboard.jsx) | Load, search, create, edit, and move commands and groups. |
+| [src/components/GroupTree.jsx](src/components/GroupTree.jsx) | Nested group navigation. |
+| [src/components/CommandCard.jsx](src/components/CommandCard.jsx) | Command display and copy interactions. |
+| [src/components/AuthPage.jsx](src/components/AuthPage.jsx) | Account flows. |
+| [src/lib/supabaseClient.js](src/lib/supabaseClient.js) | Supabase connection. |
+| [supabase-setup.sql](supabase-setup.sql) | Schema and row-level security. |
 
-## 🔧 Development
+See [SETUP.md](SETUP.md) for additional setup notes and [TESTING.md](TESTING.md) for manual verification guidance.
 
-### Available Scripts
+## Deployment
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+Build with `npm run build` and deploy `dist/` to a static host. Set both `VITE_SUPABASE_*` variables at build time, configure an SPA fallback, and add the deployed URL to Supabase Auth's allowed redirects. A Vercel configuration is included in [vercel.json](vercel.json).
 
-## 🚢 Deployment
+## License
 
-### Deploy to Vercel
-
-1. Push your code to GitHub
-2. Import project in [Vercel](https://vercel.com)
-3. Add environment variables in Vercel dashboard
-4. Deploy!
-
-### Environment Variables for Production
-
-Don't forget to add these in your hosting platform:
-
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
-
-## 🧪 Future Enhancements (Phase 2)
-
-- [ ] Command import/export (JSON/CSV)
-- [ ] Team sharing & collaboration
-- [ ] Tags and advanced filters
-- [ ] Chrome extension for quick access
-- [ ] Placeholder variable injection prompts
-- [ ] Command history and usage analytics
-
-## 📝 Database Schema
-
-### Tables
-
-**users** (handled by Supabase Auth)
-
-- `id` (uuid, primary key)
-- `email` (text)
-
-**groups**
-
-- `id` (uuid, primary key)
-- `user_id` (uuid, references users.id)
-- `name` (text)
-- `parent_id` (uuid, optional reference to groups.id)
-- `created_at` (timestamp)
-
-**commands**
-
-- `id` (uuid, primary key)
-- `group_id` (uuid, references groups.id)
-- `title` (text)
-- `command_text` (text)
-- `created_at` (timestamp)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-MIT License - feel free to use this project for your own purposes.
-
-## 🙋 Support
-
-If you encounter any issues or have questions, please open an issue on GitHub.
-
----
-
-Built with ❤️ for developers who love efficiency
+MIT.
